@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { login } from '../services/apiService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const token = await login(email, password); // Appel de la fonction login
-      Alert.alert('Connexion réussie', `Token : ${token}`);
-      // Sauvegarder le token ou naviguer vers une autre page ici
+      const token = await login(email, password); // Appel de l'API
+      await AsyncStorage.setItem('userToken', token); // Sauvegarde du token
+      Alert.alert('Connexion réussie', 'Vous êtes connecté !');
+      navigation.navigate('Home'); // Navigation vers HomeScreen
     } catch (error: any) {
-      Alert.alert('Erreur', error.message);
+      Alert.alert('Erreur', error.message || 'Une erreur est survenue.');
     }
   };
 

@@ -1,10 +1,19 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }: any) => {
-  const handleLogout = () => {
-    // Exemple : retour à la page de connexion
-    navigation.navigate('Login');
+  const handleLogout = async () => {
+    Alert.alert('Déconnexion', 'Êtes-vous sûr de vouloir vous déconnecter ?', [
+      { text: 'Annuler', style: 'cancel' },
+      {
+        text: 'Oui',
+        onPress: async () => {
+          await AsyncStorage.removeItem('userToken'); // Suppression du token
+          navigation.navigate('Login'); // Retour à l'écran de connexion
+        },
+      },
+    ]);
   };
 
   return (
